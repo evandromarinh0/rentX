@@ -17,6 +17,7 @@ import {
   Content,
   Footer,
 } from './styles';
+import { DatePicker } from '../../components/DatePicker';
 
 export function Scheduling() {
   const theme = useTheme();
@@ -44,7 +45,7 @@ export function Scheduling() {
       </Header>
 
       <Content>
-
+        <DatePicker />
       </Content>
 
       <Footer>
