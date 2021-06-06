@@ -5,14 +5,9 @@ import { Accessory } from '../../components/Accessory';
 import { BackButton } from '../../components/BackButton';
 import { ImageSlider } from '../../components/ImageSlider';
 import { Button } from '../../components/Button';
-
-
-import SpeedSvg from '../../assets/speed.svg';
-import AccelerationSvg from '../../assets/acceleration.svg';
-import ForceSvg from '../../assets/force.svg';
-import GasSvg from '../../assets/gasoline.svg';
-import ExchangeSvg from '../../assets/exchange.svg';
-import PeopleSvg from '../../assets/people.svg';
+import { useNavigation, useRoute } from '@react-navigation/core';
+import { CarProps } from '../../types/types';
+import { getAccessoryTypeIcon } from '../../utils/getAccessoryTypeIcon';
 
 import { 
   Container,
@@ -31,47 +26,62 @@ import {
   Footer
 } from './styles';
 
+interface Params {
+  car: CarProps;
+}
+
 export function CarDetails() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { car } = route.params as Params;
+
+  function handleRentalConfirm(){
+    navigation.navigate('Scheduling');
+  }
+
+  function handleGoBack(){
+    navigation.goBack();
+  }
+
   return(
     <Container>
       <StatusBar barStyle='dark-content' backgroundColor="transparent" />
       <Header>
-        <BackButton onPress={() => {}} />
+        <BackButton onPress={handleGoBack} />
       </Header>
 
       <CarImages>
-        <ImageSlider imagesUrl={['http://assets.stickpng.com/images/580b585b2edbce24c47b2c8e.png']} />
+        <ImageSlider imagesUrl={car.photos} />
       </CarImages>
       
       <Content>
         <Details>
           <Description>
-            <Brand>Lambhorgini</Brand>
-            <CarName>Huracan</CarName>
+            <Brand>{car.brand}</Brand>
+            <CarName>{car.name}</CarName>
           </Description>
           
           <Rent>
-            <Period>Ao dia</Period>
-            <Price>R$ 580</Price>
+            <Period>{car.rent.period}</Period>
+            <Price>R$ {car.rent.price}</Price>
           </Rent>
         </Details>
 
         <Accessories>
-          <Accessory name="380Km/h" icon={SpeedSvg} />
-          <Accessory name="3.2s" icon={AccelerationSvg} />
-          <Accessory name="800 HP" icon={ForceSvg} />
-          <Accessory name="Gasolina" icon={GasSvg} />
-          <Accessory name="Auto" icon={ExchangeSvg} />
-          <Accessory name="2 pessoas" icon={PeopleSvg} />
+          {car.accessories.map(accessory => (
+            <Accessory
+              key={accessory.type}
+              name={accessory.name}
+              icon={getAccessoryTypeIcon(accessory.type)} 
+            />
+          ))}
         </Accessories>
 
-        <About>
-          Este é um automóvel desportivo. Surgiu do lendário touro de lide indultado na praça Real Maes...
-        </About>
+        <About>{car.about}</About>
       </Content>
 
       <Footer>
-        <Button title="Confirmar" />
+        <Button title="Escolher período do aluguel" onPress={handleRentalConfirm} />
       </Footer>
     </Container>
   );

@@ -7,6 +7,7 @@ import { Button } from '../../components/Button';
 import { Feather } from '@expo/vector-icons';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from 'styled-components';
+import { useNavigation } from '@react-navigation/core';
 
 import SpeedSvg from '../../assets/speed.svg';
 import AccelerationSvg from '../../assets/acceleration.svg';
@@ -43,7 +44,11 @@ import {
 
 export function SchedulingDetails() {
   const theme = useTheme();
+  const navigation = useNavigation();
 
+  function handleSchedulingSuccessful(){
+    navigation.navigate('SchedulingSuccess');
+  }
   return(
     <Container>
       <StatusBar barStyle='dark-content' backgroundColor="transparent" />
@@ -111,7 +116,7 @@ export function SchedulingDetails() {
         </RentalPrice>
       </Content>
       <Footer>
-        <Button title="Confirmar" />
+        <Button title="Alugar agora" color={theme.colors.success} onPress={handleSchedulingSuccessful} />
       </Footer>
     </Container>
   );
